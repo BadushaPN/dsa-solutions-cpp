@@ -4,26 +4,35 @@ using namespace std;
 class Solution {
 public:
     int numberOfPairs(vector<vector<int>>& points) {
-        sort(points.begin(), points.end(), [](auto& a, auto& b) {
-            if (a[0] == b[0]) return a[1] > b[1];
-            return a[0] < b[0];
-        });
-
-        int n = points.size();
-        int ans = 0;
+               int n = points.size();
+        int count = 0;
 
         for (int i = 0; i < n; i++) {
-            int minY = INT_MAX;
-            for (int j = i + 1; j < n; j++) {
-                if (points[j][1] < points[i][1]) {
-                    if (points[j][1] < minY) {
-                        ans++;
-                        minY = points[j][1];
+            for (int j = 0; j < n; j++) {
+                if (i == j) continue;
+
+                auto A = points[i];
+                auto B = points[j];
+
+                if (A[0] < B[0] && A[1] < B[1]) {
+                    bool valid = true;
+
+                    for (int k = 0; k < n; k++) {
+                        if (k == i || k == j) continue;
+                        auto C = points[k];
+
+                        if (A[0] <= C[0] && C[0] <= B[0] &&
+                            A[1] <= C[1] && C[1] <= B[1]) {
+                            valid = false;
+                            break;
+                        }
                     }
+
+                    if (valid) count++;
                 }
             }
         }
-        return ans;
+        return count;
     }
 };
 
